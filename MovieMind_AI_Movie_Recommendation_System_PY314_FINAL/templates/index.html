@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieMind AI - Movie Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="navbar">
+    <div class="brand"><span class="brand-icon">🎬</span> MovieMind <span class="ai">AI</span></div>
+    <div class="nav-label">AI Movie Recommendation System</div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="badge">✦ MACHINE LEARNING POWERED</div>
+            <h1>Find your next<br><span>favorite movie.</span></h1>
+            <p>Choose a movie you love and our recommendation engine will discover similar movies using AI-powered content analysis.</p>
+
+            <form action="/recommend" method="POST" class="search-card">
+                <label for="movie">Select a movie</label>
+                <div class="input-row">
+                    <select id="movie" name="movie" required>
+                        <option value="">-- Choose a movie --</option>
+                        {% for movie in movies %}
+                        <option value="{{ movie }}" {% if selected_movie == movie %}selected{% endif %}>{{ movie }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Recommend <span>→</span></button>
+                </div>
+            </form>
+        </div>
+        <div class="hero-art">
+            <div class="poster-stack">
+                <div class="poster p1">INCEPTION<div>★ ★ ★ ★ ★</div></div>
+                <div class="poster p2">INTERSTELLAR<div>★ ★ ★ ★ ★</div></div>
+                <div class="poster p3">THE MATRIX<div>★ ★ ★ ★ ★</div></div>
+            </div>
+        </div>
+    </section>
+
+    {% if searched %}
+    <section class="results">
+        {% if recommendations %}
+        <div class="section-heading">
+            <div>
+                <div class="eyebrow">AI RESULTS</div>
+                <h2>Because you liked <strong>{{ selected_movie }}</strong></h2>
+            </div>
+            <span class="count">{{ recommendations|length }} recommendations</span>
+        </div>
+
+        <div class="movie-grid">
+            {% for movie in recommendations %}
+            <article class="movie-card">
+                <div class="movie-poster poster-{{ loop.index }}">
+                    <span class="film">🎞</span>
+                    <h3>{{ movie.title }}</h3>
+                    <small>AI RECOMMENDED</small>
+                </div>
+                <div class="movie-info">
+                    <div class="genre">{{ movie.genre }}</div>
+                    <h3>{{ movie.title }}</h3>
+                    <p>{{ movie.description }}</p>
+                    <div class="match">
+                        <span>AI Match</span>
+                        <strong>{{ movie.score }}%</strong>
+                    </div>
+                    <div class="bar"><span style="width: {{ movie.score }}%"></span></div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-results">
+            <h2>Movie not found</h2>
+            <p>Please select a movie from the list and try again.</p>
+        </div>
+        {% endif %}
+    </section>
+    {% endif %}
+
+    <section class="how">
+        <div class="eyebrow">HOW IT WORKS</div>
+        <h2>Simple input. Smart recommendations.</h2>
+        <div class="steps">
+            <div class="step"><span>01</span><h3>Choose a movie</h3><p>Select a movie you already enjoy from the database.</p></div>
+            <div class="step"><span>02</span><h3>Analyze content</h3><p>TF-IDF converts genres and descriptions into numerical features.</p></div>
+            <div class="step"><span>03</span><h3>Find similarity</h3><p>Cosine similarity compares the selected movie with every other movie.</p></div>
+            <div class="step"><span>04</span><h3>Get recommendations</h3><p>The system returns the closest matching movies.</p></div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <span>MovieMind AI</span> · B.Sc. IT AI Mini Project · Built with Python & Flask
+</footer>
+</body>
+</html>
